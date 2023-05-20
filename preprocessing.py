@@ -16,7 +16,7 @@ img2 = nib.load(op.join(data_dir, "Image_02.nii.gz"))
 img3 = nib.load(op.join(data_dir, "Image_03.nii.gz"))
 seg = nib.load(op.join(data_dir, "Image_01_SEG.nii.gz"))
 
-# Create a mask using image AFNI's 3dAutomask and image 3
+# Create a mask using image AFNI's 3dAutomask and Image_03
 # Only create the mask if it does not exist yet
 mask_fn = "mask.nii.gz"
 if not op.exists(op.join(data_dir, mask_fn)):
@@ -27,8 +27,8 @@ if not op.exists(op.join(data_dir, mask_fn)):
         cwd=data_dir,
     )
 
-# Coregister and resample the images and segmentation using img3 as reference
-# Use AFNI's 3dAllineate
+# Coregister and resample the images and segmentation using Image_03 as reference
+# Useing AFNI's 3dAllineate
 
 # List with image names that need to be coregistered
 images = ["Image_01.nii.gz", "Image_02.nii.gz", "Image_01_SEG.nii.gz"]
@@ -72,8 +72,7 @@ img3_data = masker.fit_transform(img3)
 seg_coreg = nib.load(op.join(data_dir, images_out[2]))
 seg_coreg_data = masker.fit_transform(seg_coreg)
 
-# Train a support vector machine classifier to predict the segmentation from the images
-# Use scikit-learn's SVC
+# Train a random forest classifier to predict the segmentation from the images
 # Get the data ready
 X = img1_coreg_data.flatten().reshape(-1, 1)
 y = seg_coreg_data.flatten()
@@ -81,7 +80,7 @@ y = seg_coreg_data.flatten()
 # Make sure y is an integer array
 y = y.astype(int)
 
-# Create the logistic regression model
+# Create the Random Forest Classifier model
 model = RandomForestClassifier(n_jobs=-1, verbose=1)
 
 # Train the model

@@ -1,2 +1,1 @@
-# MRI_Sequences_PreProcessing-Challenge
- 
+# MRI Sequences PreProcessing Challenge
